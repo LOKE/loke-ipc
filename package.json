@@ -1,0 +1,23 @@
+{
+  "name": "sumo-communications",
+  "version": "0.0.1",
+  "description": "Communications lib",
+  "main": "lib/index.js",
+  "dependencies": {
+    "atil": "^0.0.0",
+    "amqplib": "^0.2.1",
+    "node-uuid": "^1.4.1",
+    "q": "^1.0.1"
+  },
+  "devDependencies": {
+    "mocha": "^1.21.4"
+  },
+  "scripts": {
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/astonclub/sumo-communications"
+  },
+  "author": "Dominic Smith <dominic.smith@loke.com.au>"
+}
