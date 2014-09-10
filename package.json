@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "Communications lib",
   "main": "lib/index.js",
+  "publishConfig": {
+    "registry": "http://npm.astonclub.com.au"
+  },
   "dependencies": {
     "atil": "^0.0.0",
     "amqplib": "^0.2.1",
