@@ -1,0 +1,171 @@
+var rpcservice = require('../lib/rpc/rpcservice');
+var sinon = require('sinon');
+var q = require('q');
+require('should');
+
+var service;
+var mock;
+
+
+
+var resultResponse = sinon.match(function (response) {
+  return response.error === null &&
+         /string|number/.test(typeof response.id);
+}, "resultResponse");
+
+var errorResponse = sinon.match(function (response) {
+  return response.error !== null &&
+         response.result === null &&
+         typeof response.error.code === 'number' &&
+         /string|number/.test(typeof response.id);
+}, "resultResponse");
+
+var parseErrorResponse = sinon.match(function (response) {
+  return response.error !== null &&
+         response.result === null &&
+         typeof response.error.code === 'number';
+}, "parseErrorResponse");
+
+
+
+
+beforeEach(function () {
+  service = new rpcservice.RpcService('someService', 1);
+  mock = sinon.mock(service);
+});
+
+afterEach(function () {
+  mock.verify();
+  mock.restore();
+});
+
+describe('RpcService', function () {
+
+
+  describe('#exposeMethod()', function () {
+
+    it('should add a method to the rpcservice', function () {
+      service.exposeMethod('someMethod', function () {});
+      service.methods.should.have.property('someMethod');
+    });
+
+    it('should add methods with custom timeouts', function () {
+      service.exposeMethod('someTimeoutMethod', function () {}, 999);
+      service.methods.should.have.property('someTimeoutMethod')
+      .with.property('timeout', 999);
+    });
+  });
+
+
+  describe('#exposeServiceMethod()', function () {
+    var someService;
+
+    beforeEach(function () {
+      someService = {
+        serviceMethod: function () {},
+      };
+    });
+
+    it('should expose a method on a service', function () {
+      service.exposeServiceMethod(someService, 'serviceMethod');
+
+      service.methods.should.have.property('serviceMethod');
+    });
+
+    it('should expose a method on a service with custom timeouts', function () {
+      service.exposeServiceMethod(someService, 'serviceMethod', 999);
+      service.methods.should.have.property('serviceMethod')
+      .with.property('timeout', 999);
+    });
+  });
+
+
+  describe('#_handleMsg()', function () {
+    var hResE;
+    var method;
+
+    beforeEach(function () {
+      method = sinon.stub();
+      method.callsArg(1);
+
+      service.exposeMethod('aMethod', method);
+
+      hResE = mock.expects('_handleResponse')
+      .once();
+    });
+
+    it('should call method', function (done) {
+      var msg = {
+        content: new Buffer(JSON.stringify({
+          id: 1,
+          method: 'aMethod',
+          params: []
+        }))
+      };
+
+      hResE.withArgs(msg, resultResponse);
+
+      service._handleMsg(msg).nodeify(done);
+
+    });
+
+    it('should error on invalid json buffer', function (done) {
+      var msg = {
+        content: new Buffer('{ invalid json }'),
+      };
+
+      hResE.withArgs(msg, parseErrorResponse);
+
+      service._handleMsg(msg).nodeify(done);
+
+    });
+
+    it('should send a error response if error', function (done) {
+      method.callsArgWith(1, new Error());
+
+      var msg = {
+        content: new Buffer(JSON.stringify({
+          id: 1,
+          method: 'aMethod',
+          params: []
+        }))
+      };
+
+      hResE.withArgs(msg, errorResponse);
+
+      service._handleMsg(msg).nodeify(done);
+    });
+
+  });
+
+
+  describe('#getMeta', function () {
+    beforeEach(function () {
+      var someService = {
+        serviceMethod: function () {},
+        serviceMethodWithParams: function (paramA, paramB) {}
+      };
+
+      service.exposeMethod('aMethodWithNoParams',function () {});
+      service.exposeServiceMethod(someService, 'serviceMethod');
+      service.exposeServiceMethod(someService, 'serviceMethodWithParams');
+    });
+
+    it('should return method info', function () {
+      var meta = service.getMeta();
+
+      meta.version.should.be.exactly(1);
+      meta.serviceName.should.be.exactly('someService');
+      meta.dateExposed.should.be.instanceOf(Date);
+
+      meta.interfaces.should
+      .containDeep([{ methodName: 'aMethodWithNoParams' }])
+      .containDeep([{ methodName: 'serviceMethod' }])
+      .containDeep([{ methodName: 'serviceMethodWithParams' }]);
+
+      meta.interfaces.filter(function (i) {return i.methodName === 'serviceMethodWithParams';})[0]
+      .should.have.property('paramNames').with.containDeepOrdered(['paramA', 'paramB']);
+
+    });
+  });
+});
