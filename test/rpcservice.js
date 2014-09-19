@@ -11,20 +11,20 @@ var mock;
 var resultResponse = sinon.match(function (response) {
   return response.error === null &&
          /string|number/.test(typeof response.id);
-}, "resultResponse");
+}, 'resultResponse');
 
 var errorResponse = sinon.match(function (response) {
   return response.error !== null &&
          response.result === null &&
          typeof response.error.code === 'number' &&
          /string|number/.test(typeof response.id);
-}, "resultResponse");
+}, 'resultResponse');
 
 var parseErrorResponse = sinon.match(function (response) {
   return response.error !== null &&
          response.result === null &&
          typeof response.error.code === 'number';
-}, "parseErrorResponse");
+}, 'parseErrorResponse');
 
 
 
@@ -89,9 +89,10 @@ describe('RpcService', function () {
       method.callsArg(1);
 
       service.exposeMethod('aMethod', method);
+    });
 
-      hResE = mock.expects('_handleResponse')
-      .once();
+    afterEach(function () {
+      method.reset();
     });
 
     it('should call method', function (done) {
@@ -103,9 +104,12 @@ describe('RpcService', function () {
         }))
       };
 
-      hResE.withArgs(msg, resultResponse);
-
-      service._handleMsg(msg).nodeify(done);
+      service._handleMsg(msg)
+      .then(function(rpc) {
+        resultResponse.test(rpc.response).should.eql(true);
+        method.calledOnce.should.eql(true);
+      })
+      .nodeify(done);
 
     });
 
@@ -114,9 +118,12 @@ describe('RpcService', function () {
         content: new Buffer('{ invalid json }'),
       };
 
-      hResE.withArgs(msg, parseErrorResponse);
-
-      service._handleMsg(msg).nodeify(done);
+      service._handleMsg(msg)
+      .then(function(rpc) {
+        parseErrorResponse.test(rpc.response).should.eql(true);
+        method.calledOnce.should.eql(false);
+      })
+      .nodeify(done);
 
     });
 
@@ -125,15 +132,18 @@ describe('RpcService', function () {
 
       var msg = {
         content: new Buffer(JSON.stringify({
-          id: 1,
+          id: 3,
           method: 'aMethod',
           params: []
         }))
       };
 
-      hResE.withArgs(msg, errorResponse);
-
-      service._handleMsg(msg).nodeify(done);
+      service._handleMsg(msg)
+      .then(function(rpc) {
+        errorResponse.test(rpc.response).should.eql(true);
+        method.calledOnce.should.eql(true);
+      })
+      .nodeify(done);
     });
 
   });
