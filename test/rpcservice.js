@@ -64,6 +64,8 @@ describe('RpcService', function () {
       someService = {
         serviceMethod: function () {},
       };
+
+      someService.serviceMethod.$timeout = 999;
     });
 
     it('should expose a method on a service', function () {
@@ -73,7 +75,7 @@ describe('RpcService', function () {
     });
 
     it('should expose a method on a service with custom timeouts', function () {
-      service.exposeServiceMethod(someService, 'serviceMethod', 999);
+      service.exposeServiceMethod(someService, 'serviceMethod');
       service.methods.should.have.property('serviceMethod')
       .with.property('timeout', 999);
     });
