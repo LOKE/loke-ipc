@@ -23,7 +23,7 @@ var errorResponse = sinon.match(function (response) {
 var parseErrorResponse = sinon.match(function (response) {
   return response.error !== null &&
          response.result === null &&
-         typeof response.error.code === 'number';
+         response.error.code === -32700;
 }, 'parseErrorResponse');
 
 
@@ -62,7 +62,7 @@ describe('RpcService', function () {
 
     beforeEach(function () {
       someService = {
-        serviceMethod: function () {},
+        serviceMethod: function () {}
       };
 
       someService.serviceMethod.$timeout = 999;
@@ -83,7 +83,6 @@ describe('RpcService', function () {
 
 
   describe('#_handleMsg()', function () {
-    var hResE;
     var method;
 
     beforeEach(function () {
@@ -106,25 +105,27 @@ describe('RpcService', function () {
         }))
       };
 
+      mock.expects('_handleResponse')
+      .once()
+      .withArgs(msg, resultResponse)
+      .returns(q.when());
+
       service._handleMsg(msg)
-      .then(function(rpc) {
-        resultResponse.test(rpc.response).should.eql(true);
-        method.calledOnce.should.eql(true);
-      })
       .nodeify(done);
 
     });
 
     it('should error on invalid json buffer', function (done) {
       var msg = {
-        content: new Buffer('{ invalid json }'),
+        content: new Buffer('{ invalid json }')
       };
 
+      mock.expects('_handleResponse')
+      .once()
+      .withArgs(msg, parseErrorResponse)
+      .returns(q.when());
+
       service._handleMsg(msg)
-      .then(function(rpc) {
-        parseErrorResponse.test(rpc.response).should.eql(true);
-        method.calledOnce.should.eql(false);
-      })
       .nodeify(done);
 
     });
@@ -140,12 +141,14 @@ describe('RpcService', function () {
         }))
       };
 
+      mock.expects('_handleResponse')
+      .once()
+      .withArgs(msg, errorResponse)
+      .returns(q.when());
+
       service._handleMsg(msg)
-      .then(function(rpc) {
-        errorResponse.test(rpc.response).should.eql(true);
-        method.calledOnce.should.eql(true);
-      })
       .nodeify(done);
+
     });
 
   });
