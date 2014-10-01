@@ -16,6 +16,7 @@
     "mocha": "^1.21.4"
   },
   "scripts": {
+    "lint": "eslint --rulesdir eslint-rules .",
     "test": "mocha test"
   },
   "repository": {
