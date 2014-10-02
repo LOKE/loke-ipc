@@ -9,6 +9,10 @@ beforeEach(function () {
   subscriber = new pubsub.Subscriber({});
   sinon.stub(subscriber, '_bindQueue')
   .returns(q.when());
+
+  sinon.stub(subscriber, '_unbindQueue')
+  .returns(q.when());
+
 });
 
 describe('Subscriber', function () {
@@ -121,6 +125,30 @@ describe('Subscriber', function () {
         handler3.calledOnce.should.eql(true);
         handler4.calledOnce.should.eql(true);
         handler5.called.should.eql(false);
+
+      }).done(done);
+    });
+  });
+
+  describe('#subscribeOnce()', function () {
+
+    it('should only fire once', function (done) {
+      var handler = new sinon.spy();
+
+      subscriber.subscribeOnce('some.key', handler)
+      .then(function () {
+
+        var msg = {
+          content: '{}',
+          fields: {
+            routingKey: 'some.key'
+          }
+        };
+
+        subscriber._handleMsg(msg);
+        subscriber._handleMsg(msg);
+
+        sinon.assert.callCount(handler, 1);
 
       }).done(done);
     });
