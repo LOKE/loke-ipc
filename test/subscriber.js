@@ -29,14 +29,14 @@ describe('Subscriber', function () {
           fields: {
             routingKey: 'some.key'
           }
-        })
+        });
 
         subscriber._handleMsg({
           content: '{}',
           fields: {
             routingKey: 'some.other.key'
           }
-        })
+        });
 
         handler.calledOnce.should.eql(true);
 
@@ -55,14 +55,14 @@ describe('Subscriber', function () {
           fields: {
             routingKey: 'some.other.key'
           }
-        })
+        });
 
         subscriber._handleMsg({
           content: '{}',
           fields: {
             routingKey: 'some.four.word.key'
           }
-        })
+        });
 
         handler.calledOnce.should.eql(true);
 
@@ -81,14 +81,14 @@ describe('Subscriber', function () {
           fields: {
             routingKey: 'some.key'
           }
-        })
+        });
 
         subscriber._handleMsg({
           content: '{}',
           fields: {
             routingKey: 'some.four.word.key'
           }
-        })
+        });
 
         handler.calledTwice.should.eql(true);
 
@@ -118,7 +118,7 @@ describe('Subscriber', function () {
           fields: {
             routingKey: 'some.four.word.key'
           }
-        })
+        });
 
         handler1.calledOnce.should.eql(true);
         handler2.calledOnce.should.eql(true);
