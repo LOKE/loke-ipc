@@ -1,6 +1,6 @@
 {
   "name": "sumo-communications",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "description": "Communications lib",
   "main": "lib/index.js",
   "publishConfig": {
