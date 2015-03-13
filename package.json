@@ -1,10 +1,10 @@
 {
-  "name": "sumo-communications",
-  "version": "1.0.0",
-  "description": "Communications lib",
+  "name": "loke-ipc",
+  "version": "0.4.0",
+  "description": "Inter-process/service communications lib",
   "main": "lib/index.js",
   "publishConfig": {
-    "registry": "http://npm.astonclub.com.au"
+    "registry": "http://npm.loke.com.au"
   },
   "dependencies": {
     "atil": "^0.0.0",
