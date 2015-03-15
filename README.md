@@ -1,11 +1,13 @@
-# Sumo Communications
+# LOKE IPC (Inter-process comms) Library
+
+
 
 ## Connecting
 
 ```js
-var sumoComms = require('sumo-communications');
+var lokeIpc = require('loke-ipc');
 
-sumoComms.connect()
+lokeIpc.connect()
 .then(function(connection) {
    console.log('Connected!'); 
 });
@@ -13,7 +15,7 @@ sumoComms.connect()
 
 Alternatively use the constructor:
 ```js
-var Communications = require('sumo-communications').Communications;
+var Communications = require('loke-ipc').Communications;
 
 var communications = new Communications(config);
 communications.start()
@@ -25,9 +27,9 @@ communications.start()
 Specify the location of RMQ:
 
 ```js
-var sumoComms = require('sumo-communications');
+var lokeIpc = require('loke-ipc');
 
-sumoComms.connect('amqp://localhost')
+lokeIpc.connect('amqp://localhost')
 .then(function(connection) {
    console.log('Connected!'); 
 });
@@ -37,9 +39,9 @@ sumoComms.connect('amqp://localhost')
 ## Consuming Services
 
 ```js
-var sumoComms = require('sumo-communications');
+var lokeIpc = require('loke-ipc');
 
-sumoComms.connect('amqp://localhost')
+lokeIpc.connect('amqp://localhost')
 .then(function(connection) {
    return connection.getRpcClient();
 })
@@ -52,9 +54,9 @@ sumoComms.connect('amqp://localhost')
 Or use the service builder:
 
 ```js
-var sumoComms = require('sumo-communications');
+var lokeIpc = require('loke-ipc');
 
-sumoComms.connect('amqp://localhost')
+lokeIpc.connect('amqp://localhost')
 .then(function(connection) {
    return connection.getRpcClient();
 })
@@ -82,9 +84,9 @@ closeServices
 A custom logger can be provided. If none is provided then console will be used.
 
 ```js
-var sumoComms = require('sumo-communications');
+var lokeIpc = require('loke-ipc');
 
-sumoComms.connect(null, myCustomerLogger)
+lokeIpc.connect(null, myCustomerLogger)
 .then(function(connection) {
    console.log('Connected!'); 
 });
