@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+var repl = require('repl');
+var q = require('q');
+var vm = require('vm');
+var ipc = require('../lib');
+
+var services = [
+  { name: 'checkins', version: 1 },
+  { name: 'orders', version: 1 }
+];
+
+
+ipc.connect(process.argv[2])
+.then(function (comms) {
+
+
+  function loadService(service) {
+    return comms.create(service.name, service.version)
+    .then(function (_client) {
+      service.client = _client;
+      return service;
+    })
+    .fail(function (err) {
+      console.log('Error conecting rpc service:', err);
+    });
+  }
+
+  return q.all(services.map(loadService))
+  .then(function (services) {
+    var r = repl.start({
+      prompt: 'ipc> ',
+      eval: function (cmd, context, filename, callback) {
+        q.try(function () {
+          return vm.runInContext(cmd, context, { filename: filename });
+        })
+        .nodeify(callback);
+      }
+    });
+
+    services.forEach(function (service) {
+      r.context[service.name] = service.client;
+    });
+
+    r.on('exit', function () {
+      console.log('\nexiting...');
+      comms.stop()
+      .then(function () {
+        console.log('done!, bye.');
+      })
+      .done();
+    });
+  });
+})
+.done();

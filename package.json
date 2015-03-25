@@ -13,7 +13,7 @@
     "q": "^1.0.1"
   },
   "devDependencies": {
-    "eslint": "^0.8.2",
+    "eslint": "^0.17.1",
     "mocha": "^1.21.4",
     "should": "^4.1.0",
     "sinon": "^1.10.3"
