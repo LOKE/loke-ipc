@@ -4,6 +4,7 @@ var q = require('q');
 var vm = require('vm');
 var ipc = require('../lib');
 
+// TODO: probably don't want this hard coded
 var services = [
   { name: 'checkins', version: 1 },
   { name: 'orders', version: 1 }
