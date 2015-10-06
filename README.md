@@ -9,7 +9,7 @@ var lokeIpc = require('loke-ipc');
 
 lokeIpc.connect()
 .then(function(connection) {
-   console.log('Connected!'); 
+   console.log('Connected!');
 });
 ```
 
@@ -20,7 +20,7 @@ var Communications = require('loke-ipc').Communications;
 var communications = new Communications(config);
 communications.start()
 .then(function() {
-   console.log('Connected!'); 
+   console.log('Connected!');
 });
 ```
 
@@ -31,7 +31,7 @@ var lokeIpc = require('loke-ipc');
 
 lokeIpc.connect('amqp://localhost')
 .then(function(connection) {
-   console.log('Connected!'); 
+   console.log('Connected!');
 });
 ```
 
@@ -88,6 +88,50 @@ var lokeIpc = require('loke-ipc');
 
 lokeIpc.connect(null, myCustomerLogger)
 .then(function(connection) {
-   console.log('Connected!'); 
+   console.log('Connected!');
 });
+```
+
+## CLI
+
+The cli tools are configured using [rc](https://github.com/dominictarr/rc).
+This means config variables can be set in
+
+- `~/.ipcrc`
+- `./.ipcrc` (current directory, probably you project directory)
+
+or by using a command line flag
+
+```
+--ipc_amqpuri='amqp://somehost'
+```
+
+**The currently available variables are:**
+
+- `amqpuri` the amqp server to connect to
+
+### ipc-install
+
+```
+Usage: ipc-install <service>...
+
+<service>    in the format serviceName@version
+```
+
+example
+
+```
+$ ipc-install orders@1
+writing... /my/project/ipc_manifests/orders.json
+```
+
+### ipc-repl
+
+```
+Usage: ipc-repl
+```
+$ ipc-repl
+ipc> orders.ping()
+'pong'
+ipc>
 ```

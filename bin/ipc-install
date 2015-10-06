@@ -1,0 +1,47 @@
+#!/usr/bin/env node
+var commsContext = require('./helpers/comms-context');
+var docopt = require('docopt').docopt;
+var fs = require('fs');
+var path = require('path');
+var Q = require('q');
+
+var IPC_MANIFEST_DIR = './ipc_manifests';
+
+var doc = [
+  'Usage: ipc-install <service>...',
+  '',
+  '<service>    in the format serviceName@version'
+].join('\n');
+
+var opts = docopt(doc);
+
+try {
+  fs.accessSync(IPC_MANIFEST_DIR);
+} catch (e) {
+  fs.mkdirSync(IPC_MANIFEST_DIR);
+}
+
+commsContext(function (comms) {
+  return comms.getRpcClient()
+  .then(function (client) {
+    return Q.all(opts['<service>'].map(function (service) {
+      var parts = service.split('@');
+
+      var name = parts[0];
+      var version = parseInt(parts[1]);
+
+      return client.getMeta(name, version);
+    }));
+  })
+  .then(function (metas) {
+    return Q.all(metas.map(function (serviceMeta) {
+      var filePath = path.resolve(IPC_MANIFEST_DIR, serviceMeta.serviceName + '.json');
+      var jsonString = JSON.stringify(serviceMeta, null, '  ');
+
+      console.log('writing...', filePath);
+
+      return Q.ninvoke(fs, 'writeFile', filePath, jsonString);
+    }));
+  });
+})
+.done();
