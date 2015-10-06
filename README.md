@@ -51,18 +51,24 @@ lokeIpc.connect('amqp://localhost')
 });
 ```
 
-Or use the service builder:
+Or use installed service manifests (see [ipc-install](#ipc-install)):
+
+```
+$ ipc-install some-service@1
+```
+
+then
 
 ```js
 var lokeIpc = require('loke-ipc');
 
 lokeIpc.connect('amqp://localhost')
 .then(function(connection) {
-   return connection.getRpcClient();
+  return connection.getRpcClient();
 })
 .then(function(client) {
-    client.request(/* ... */);
-    // ...
+  var someService = client.load('some-service');
+  someService.doSomething(/*...*/);
 });
 ```
 
@@ -129,6 +135,10 @@ writing... /my/project/ipc_manifests/orders.json
 
 ```
 Usage: ipc-repl
+```
+
+example
+
 ```
 $ ipc-repl
 ipc> orders.ping()
