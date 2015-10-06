@@ -161,7 +161,7 @@ describe('RpcService', function () {
         serviceMethodWithParams: function (paramA, paramB) {}
       };
 
-      service.exposeMethod('aMethodWithNoParams',function () {});
+      service.exposeMethod('aMethodWithNoParams', function () {});
       service.exposeServiceMethod(someService, 'serviceMethod');
       service.exposeServiceMethod(someService, 'serviceMethodWithParams');
     });
@@ -178,7 +178,9 @@ describe('RpcService', function () {
       .containDeep([{ methodName: 'serviceMethod' }])
       .containDeep([{ methodName: 'serviceMethodWithParams' }]);
 
-      meta.interfaces.filter(function (i) {return i.methodName === 'serviceMethodWithParams';})[0]
+      meta.interfaces.filter(function (i) {
+        return i.methodName === 'serviceMethodWithParams'; }
+      )[0]
       .should.have.property('paramNames').with.containDeepOrdered(['paramA', 'paramB']);
 
     });

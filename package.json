@@ -7,10 +7,18 @@
     "registry": "http://npm.loke.com.au"
   },
   "dependencies": {
-    "atil": "^0.0.0",
     "amqplib": "^0.2.1",
+    "docopt": "^0.6.2",
+    "fn-annotate": "^1.1.1",
+    "glob": "^5.0.15",
+    "humps": "^0.7.0",
     "node-uuid": "^1.4.1",
-    "q": "^1.0.1"
+    "q": "^1.0.1",
+    "rc": "^1.1.2"
+  },
+  "bin": {
+    "ipc-repl": "./bin/ipc-repl",
+    "ipc-install": "./bin/ipc-install"
   },
   "devDependencies": {
     "eslint": "^0.17.1",
