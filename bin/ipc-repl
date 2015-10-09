@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+var repl = require('repl');
+var q = require('q');
+var path = require('path');
+var vm = require('vm');
+var glob = require('glob');
+var humps = require('humps');
+
+var commsContext = require('./helpers/comms-context');
+// var docopt = require('docopt').docopt;
+
+
+commsContext(function (comms) {
+  return comms.getRpcClient()
+  .then(function (client) {
+    var services = glob.sync('./ipc_manifests/*.json')
+    .map(function (servicePath) {
+      var serviceMeta = require(path.resolve(servicePath));
+
+      return {
+        client: client.createInterface(serviceMeta),
+        name: serviceMeta.serviceName
+      };
+    });
+
+    var r = repl.start({
+      prompt: 'ipc> ',
+      eval: function (cmd, context, filename, callback) {
+        q.try(function () {
+          return vm.runInContext(cmd, context, { filename: filename });
+        })
+        .nodeify(callback);
+      }
+    });
+
+    services.forEach(function (service) {
+      r.context[humps.camelize(service.name)] = service.client;
+    });
+
+    return q.Promise(function (resolve) {
+      r.on('exit', resolve);
+    });
+  });
+})
+.done();

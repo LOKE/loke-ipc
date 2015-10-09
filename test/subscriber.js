@@ -3,16 +3,21 @@ var sinon = require('sinon');
 var q = require('q');
 require('should');
 
-var subscriber;
+var subscriber, _bindQueue, _unbindQueue;
 
 beforeEach(function () {
   subscriber = new pubsub.Subscriber({});
-  sinon.stub(subscriber, '_bindQueue')
+  _bindQueue = sinon.stub(subscriber, '_bindQueue')
   .returns(q.when());
 
-  sinon.stub(subscriber, '_unbindQueue')
+  _unbindQueue = sinon.stub(subscriber, '_unbindQueue')
   .returns(q.when());
 
+});
+
+afterEach(function () {
+  _bindQueue.reset();
+  _unbindQueue.reset();
 });
 
 describe('Subscriber', function () {
@@ -150,6 +155,92 @@ describe('Subscriber', function () {
 
         sinon.assert.callCount(handler, 1);
 
+      }).done(done);
+    });
+  });
+
+  describe('#unsubscribe()', function () {
+
+    it('should only unsubscribe itself (exact)', function (done) {
+      var handler1 = new sinon.spy();
+      var handler2 = new sinon.spy();
+
+      q.all([
+        subscriber.subscribe('some.key', handler1),
+        subscriber.subscribe('some.key', handler2)
+      ])
+      .then(function (results) {
+        return results[1].destroy();
+      })
+      .then(function () {
+
+        var msg = {
+          content: '{}',
+          fields: {
+            routingKey: 'some.key'
+          }
+        };
+
+        subscriber._handleMsg(msg);
+
+        sinon.assert.callCount(handler1, 1);
+        sinon.assert.callCount(handler2, 0);
+        // sinon.assert.callCount(_bindQueue, 1);
+        sinon.assert.callCount(_unbindQueue, 0);
+
+      }).done(done);
+    });
+
+    it('should only unsubscribe itself (pattern)', function (done) {
+      var handler1 = new sinon.spy();
+      var handler2 = new sinon.spy();
+
+      q.all([
+        subscriber.subscribe('some.*', handler1),
+        subscriber.subscribe('some.*', handler2)
+      ])
+      .then(function (results) {
+        return results[1].destroy();
+      })
+      .then(function () {
+
+        var msg = {
+          content: '{}',
+          fields: {
+            routingKey: 'some.key'
+          }
+        };
+
+        subscriber._handleMsg(msg);
+
+        sinon.assert.callCount(handler1, 1);
+        sinon.assert.callCount(handler2, 0);
+        // sinon.assert.callCount(_bindQueue, 1);
+        sinon.assert.callCount(_unbindQueue, 0);
+
+      }).done(done);
+    });
+
+    it('should unbind on last unsubscribe', function (done) {
+      var handler1 = new sinon.spy();
+      var handler2 = new sinon.spy();
+
+      q.all([
+        subscriber.subscribe('some.*', handler1),
+        subscriber.subscribe('some.*', handler2)
+      ])
+      .then(function (results) {
+        return q.all([
+          results[0].destroy(),
+          results[0].destroy(),
+          results[1].destroy()
+        ]);
+      })
+      .then(function () {
+        if (subscriber._keycount['some.*'] !== 0) {
+          throw new Error('should\'t go negative');
+        }
+        sinon.assert.callCount(_unbindQueue, 1);
       }).done(done);
     });
   });
