@@ -1,19 +1,24 @@
 {
-  "name": "sumo-communications",
-  "version": "0.3.0",
-  "description": "Communications lib",
+  "name": "loke-ipc",
+  "version": "0.5.1",
+  "description": "Inter-process/service communications lib",
   "main": "lib/index.js",
-  "publishConfig": {
-    "registry": "http://npm.astonclub.com.au"
-  },
   "dependencies": {
-    "atil": "^0.0.0",
     "amqplib": "^0.2.1",
+    "docopt": "^0.6.2",
+    "fn-annotate": "^1.1.1",
+    "glob": "^5.0.15",
+    "humps": "^0.7.0",
     "node-uuid": "^1.4.1",
-    "q": "^1.0.1"
+    "q": "^1.0.1",
+    "rc": "^1.1.2"
+  },
+  "bin": {
+    "ipc-repl": "./bin/ipc-repl",
+    "ipc-install": "./bin/ipc-install"
   },
   "devDependencies": {
-    "eslint": "^0.8.2",
+    "eslint": "^0.17.1",
     "mocha": "^1.21.4",
     "should": "^4.1.0",
     "sinon": "^1.10.3"
@@ -24,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/astonclub/sumo-communications"
+    "url": "https://github.com/LOKE/loke-ipc"
   },
   "author": "Dominic Smith <dominic.smith@loke.com.au>"
 }
