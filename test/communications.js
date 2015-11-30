@@ -43,12 +43,15 @@ describe('Communications', function () {
       comms.on('request:error', decrementCount);
       comms.on('request:uncaughterr', decrementCount);
 
-      rpcService.emit('request:start', {});
-      rpcService.emit('request:complete', {});
-      rpcService.emit('request:error', {});
-      rpcService.emit('request:uncaughterr', {});
+      rpcService.emit('request:start', {i:4});
+      rpcService.emit('request:complete', {i:3});
+      rpcService.emit('request:error', {i:2});
+      rpcService.emit('request:uncaughterr', {i:1});
 
-      function decrementCount() {
+      function decrementCount(e) {
+        // check that the args were passed through...
+        // since events will arrive in sequence we can check e.i
+        e.i.should.equal(expectedEvents);
         if (--expectedEvents === 0) {
           done();
         }
