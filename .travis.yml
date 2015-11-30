@@ -1,9 +1,12 @@
 language: node_js
 services:
-  - rabbitmq
+- rabbitmq
 node_js:
-  - "5"
-  - "4"
-  - "0.12"
-  - "0.11"
-  - "0.10"
+- '5'
+- '4'
+- '0.12'
+- '0.11'
+- '0.10'
+notifications:
+  slack:
+    secure: KsxHs0FFtRhahX8KhiF4lHmNjRHCQGdFYgBzwN98MXvkR+zLGB0AHeoG4ZINTSR6KG+s+gQRtF4ng2oAbu3UZiFizG91Zot/FE7ESwMBgZ1lJt0xz2v8Y9+nel6+b4Q+qcVchtI1L4M0PXomFMWreXqiie/StNLc4bTUXM8u3aLgL06vb7g7HA3TIbBuzyDnTpNjmWy+gS55BEa1a2aNIWHTibRtRtjsmOlq3ZEERoznGHO/rFXGVxioM7ernATVUociZkLPXXFLTcSeDRUE1hlpBuWmqSE0vxU66N5us9tHhpifaolIc4ric3zifJEnirom7Z1Qv1H6yJyWohVuc9HHlfIoasFZ1tjrcnOb24lpl31e65FBJeLo9ITWeE1//nVPZjFai+GFisQW+w272KBiaEF9q7hCsiDnhM9/bobs5vdZ4ne7zdJMHrOuMqc9J2wBuhDhuGMnrclA5Ns+7Eqct8PHDYvT9YAJUsJDhkr6GeMCzsN8LgNEUrja00Zn3hAL3MPTc5koLGTQIUS3TEvktCnxUhqxMs7ympnONwmOdeK0zVAfGgYWimH7ej7GoeQOt7Z0Woe+ECzQo6f/njGBcsVRh8szaS0bSfKA8pkSbhX0PQATr8f5LRPEp/nXrV5Q4h1xbd/SG4/JW7GteSg8Nkbw7Yg93CLDeleuf2A=
