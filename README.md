@@ -118,10 +118,24 @@ The response object is of type:
 ```js
 {
   result: myResult, // response from the method (type: any)
-  error: null,      // error message if any
+  error: null,      // JSON-RPC error will be null if there is a result
   id: id            // the message ID from the request
 }
 ```
+
+In the event of an error:
+```js
+{
+  result: null,   // null result in case of error
+  error: {
+    code: -32000, // JSON-RPC error code
+    message: "Failed abysmally",  // error description
+    data: {}      // additional details (inner error or exception)
+  },
+  id: id
+}
+```
+
 
 ### request:start
 
