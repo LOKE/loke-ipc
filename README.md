@@ -103,6 +103,26 @@ lokeIpc.connect('amqp://localhost')
 });
 ```
 
+For the following events a request object is of type:
+
+```js
+{
+  id: 1,  // message ID
+  method: 'myMethodName', // method name
+  params: [] // array[*] of params passed to the method
+}
+```
+
+The response object is of type:
+
+```js
+{
+  result: myResult, // response from the method (type: any)
+  error: null,      // error message if any
+  id: id            // the message ID from the request
+}
+```
+
 ### request:start
 
 ```js
