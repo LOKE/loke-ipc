@@ -87,20 +87,18 @@ closeServices
 
 ## RPC Events
 
-When exposing RPC methods a number of events are fired from the RPC client to assist with logging and debugging.
+When exposing RPC methods a number of events are fired from RPC service and proxied through to communications to assist with logging and debugging.
 
 ```js
-var lokeIpc = require('loke-ipc');
+// events for any/all exposed services are emitted on the connection
+connection.on('request:start', doStuff);
+connection.on('request:complete', doStuff);
+connection.on('request:error', doStuff);
 
-lokeIpc.connect('amqp://localhost')
-.then(function(connection) {
-  return connection.getRpcClient();
-})
-.then(function(client) {
-  client.on('request:start', doStuff);
-  client.on('request:complete', doStuff);
-  client.on('request:error', doStuff);
-});
+// events for a specific exposed service are emitted on the RPC service itself
+rpcSvc.on('request:start', doStuff);
+rpcSvc.on('request:complete', doStuff);
+rpcSvc.on('request:error', doStuff);
 ```
 
 For the following events a request object is of type:
@@ -140,7 +138,7 @@ In the event of an error:
 ### request:start
 
 ```js
-client.on('request:start', function(e) {
+conn.on('request:start', function(e) {
   console.log(e.method); // the method name eg "getCustomers" (string)
   console.log(e.request); // the full request object
 });
@@ -149,7 +147,7 @@ client.on('request:start', function(e) {
 ### request:complete
 
 ```js
-client.on('request:start', function(e) {
+conn.on('request:start', function(e) {
   console.log(e.method); // the method name eg "getCustomers" (string)
   console.log(e.request); // the full request object
   console.log(e.response); // the full response object
@@ -160,7 +158,7 @@ client.on('request:start', function(e) {
 ### request:error
 
 ```js
-client.on('request:error', function(e) {
+conn.on('request:error', function(e) {
   // NOTE: method and request could be undefined depending on where error was thrown (ie: if before message was parsed)
   console.log(e.method); // the method name eg "getCustomers" (string)
   console.log(e.request); // the full request object
