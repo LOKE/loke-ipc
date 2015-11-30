@@ -85,6 +85,57 @@ closeServices
 
 ```
 
+## RPC Events
+
+When exposing RPC methods a number of events are fired from the RPC client to assist with logging and debugging.
+
+```js
+var lokeIpc = require('loke-ipc');
+
+lokeIpc.connect('amqp://localhost')
+.then(function(connection) {
+  return connection.getRpcClient();
+})
+.then(function(client) {
+  client.on('request:start', doStuff);
+  client.on('request:complete', doStuff);
+  client.on('request:error', doStuff);
+});
+```
+
+### request:start
+
+```js
+client.on('request:start', function(e) {
+  console.log(e.method); // the method name eg "getCustomers" (string)
+  console.log(e.request); // the full request object
+});
+```
+
+### request:complete
+
+```js
+client.on('request:start', function(e) {
+  console.log(e.method); // the method name eg "getCustomers" (string)
+  console.log(e.request); // the full request object
+  console.log(e.response); // the full response object
+  console.log(e.duration); // the duration of the request in milliseconds (double)
+});
+```
+
+### request:error
+
+```js
+client.on('request:error', function(e) {
+  // NOTE: method and request could be undefined depending on where error was thrown (ie: if before message was parsed)
+  console.log(e.method); // the method name eg "getCustomers" (string)
+  console.log(e.request); // the full request object
+  console.log(e.error); // the error thrown (Error)
+});
+```
+
+
+
 ## More
 
 A custom logger can be provided. If none is provided then console will be used.
