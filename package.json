@@ -25,7 +25,8 @@
   },
   "scripts": {
     "lint": "eslint --rulesdir eslint-rules .",
-    "test": "mocha test"
+    "test": "mocha test",
+    "test-dev": "nodemon -x \"_mocha $@\""
   },
   "repository": {
     "type": "git",
