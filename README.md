@@ -85,6 +85,89 @@ closeServices
 
 ```
 
+## RPC Events
+
+When exposing RPC methods a number of events are fired from RPC service and proxied through to communications to assist with logging and debugging.
+
+```js
+// events for any/all exposed services are emitted on the connection
+connection.on('request:start', doStuff);
+connection.on('request:complete', doStuff);
+connection.on('request:error', doStuff);
+
+// events for a specific exposed service are emitted on the RPC service itself
+rpcSvc.on('request:start', doStuff);
+rpcSvc.on('request:complete', doStuff);
+rpcSvc.on('request:error', doStuff);
+```
+
+For the following events a request object is of type:
+
+```js
+{
+  id: 1,  // message ID
+  method: 'myMethodName', // method name
+  params: [] // array[*] of params passed to the method
+}
+```
+
+The response object is of type:
+
+```js
+{
+  result: myResult, // response from the method (type: any)
+  error: null,      // JSON-RPC error will be null if there is a result
+  id: id            // the message ID from the request
+}
+```
+
+In the event of an error:
+```js
+{
+  result: null,   // null result in case of error
+  error: {
+    code: -32000, // JSON-RPC error code
+    message: "Failed abysmally",  // error description
+    data: {}      // additional details (inner error or exception)
+  },
+  id: id
+}
+```
+
+
+### request:start
+
+```js
+conn.on('request:start', function(e) {
+  console.log(e.method); // the method name eg "getCustomers" (string)
+  console.log(e.request); // the full request object
+});
+```
+
+### request:complete
+
+```js
+conn.on('request:start', function(e) {
+  console.log(e.method); // the method name eg "getCustomers" (string)
+  console.log(e.request); // the full request object
+  console.log(e.response); // the full response object
+  console.log(e.duration); // the duration of the request in milliseconds (double)
+});
+```
+
+### request:error
+
+```js
+conn.on('request:error', function(e) {
+  // NOTE: method and request could be undefined depending on where error was thrown (ie: if before message was parsed)
+  console.log(e.method); // the method name eg "getCustomers" (string)
+  console.log(e.request); // the full request object
+  console.log(e.error); // the error thrown (Error)
+});
+```
+
+
+
 ## More
 
 A custom logger can be provided. If none is provided then console will be used.

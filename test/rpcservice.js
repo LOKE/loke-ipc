@@ -151,6 +151,92 @@ describe('RpcService', function () {
 
     });
 
+    it('should call fire request:start event', function (done) {
+      var msg = {
+        content: new Buffer(JSON.stringify({
+          id: 1,
+          method: 'aMethod',
+          params: []
+        }))
+      };
+
+      mock.expects('_handleResponse')
+        .once()
+        .withArgs(msg, resultResponse)
+        .returns(q.when());
+
+      service.on('request:start', function(e) {
+        e.should.have.property('request');
+        e.should.have.property('method');
+        e.method.should.equal('aMethod');
+        done();
+      });
+
+      service._handleMsg(msg).done();
+    });
+
+    it('should call fire request:complete event with duration', function (done) {
+      var msg = {
+        content: new Buffer(JSON.stringify({
+          id: 1,
+          method: 'aMethod',
+          params: []
+        }))
+      };
+
+      mock.expects('_handleResponse')
+        .once()
+        .withArgs(msg, resultResponse)
+        .returns(q.when());
+
+      service.on('request:complete', function(e) {
+        e.should.have.property('request');
+        e.should.have.property('response');
+        e.should.have.property('method');
+        e.should.have.property('duration');
+
+        e.method.should.equal('aMethod');
+        e.duration.should.be.above(0);
+        e.duration.should.be.below(100); // no way this should be above 100ms 
+
+        done();
+      });
+
+      service._handleMsg(msg).done();
+    });
+
+
+
+    it('should call fire request:error event on error', function (done) {
+
+      var msg = {
+        content: new Buffer(JSON.stringify({
+          id: 1,
+          method: 'aMethod',
+          params: []
+        }))
+      };
+
+      mock.expects('_handleRequest')
+        .returns(q.reject(new Error('Rejected')));
+
+      service.on('request:error', function(e) {
+        try {
+          e.should.have.property('error');
+          e.should.have.property('method');
+          e.method.should.equal('aMethod');
+          e.error.message.should.equal('Rejected');
+        } catch(err) {
+          return done(err);
+        }
+        done();
+      });
+
+      service._handleMsg(msg)
+        .fail(function(err) { })
+        .done();
+    });
+
   });
 
 

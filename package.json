@@ -1,6 +1,6 @@
 {
   "name": "loke-ipc",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "Inter-process/service communications lib",
   "main": "lib/index.js",
   "dependencies": {
@@ -25,7 +25,8 @@
   },
   "scripts": {
     "lint": "eslint --rulesdir eslint-rules .",
-    "test": "mocha test"
+    "test": "mocha test",
+    "test-dev": "nodemon -x \"_mocha $@\""
   },
   "repository": {
     "type": "git",
