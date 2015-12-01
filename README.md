@@ -1,6 +1,6 @@
 # LOKE IPC (Inter-process comms) Library
 
-
+[![Build Status](https://travis-ci.org/LOKE/loke-ipc.svg?branch=master)](https://travis-ci.org/LOKE/loke-ipc)
 
 ## Connecting
 
