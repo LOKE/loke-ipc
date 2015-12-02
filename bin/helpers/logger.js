@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   debug: function () {},
   info: console.info.bind(console, 'Info:'),

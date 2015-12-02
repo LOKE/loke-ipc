@@ -1,3 +1,5 @@
+'use strict';
+
 var rpcservice = require('../lib/rpc/rpcservice');
 var sinon = require('sinon');
 var q = require('q');
@@ -197,7 +199,7 @@ describe('RpcService', function () {
 
         e.method.should.equal('aMethod');
         e.duration.should.be.above(0);
-        e.duration.should.be.below(100); // no way this should be above 100ms 
+        e.duration.should.be.below(100); // no way this should be above 100ms
 
         done();
       });
@@ -233,7 +235,7 @@ describe('RpcService', function () {
       });
 
       service._handleMsg(msg)
-        .fail(function(err) { })
+        .fail(function() { })
         .done();
     });
 

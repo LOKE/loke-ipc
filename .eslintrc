@@ -31,7 +31,7 @@
 
     # Done care
     no-process-exit: 0
-    strict: 0
+    strict: 2
     no-use-before-define: 0
     no-underscore-dangle: 0
     no-mixed-requires: 0
