@@ -30,7 +30,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LOKE/loke-ipc"
+    "url": "git+https://github.com/LOKE/loke-ipc.git"
   },
-  "author": "Dominic Smith <dominic.smith@loke.com.au>"
+  "author": "Dominic Smith <dominic.smith@loke.com.au>",
+  "bugs": {
+    "url": "https://github.com/LOKE/loke-ipc/issues"
+  },
+  "homepage": "https://github.com/LOKE/loke-ipc#readme",
+  "directories": {
+    "test": "test"
+  },
+  "license": "MIT"
 }
