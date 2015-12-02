@@ -1,3 +1,5 @@
+'use strict';
+
 var pubsub = require('../lib/pubsub');
 var sinon = require('sinon');
 var q = require('q');

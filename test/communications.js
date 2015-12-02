@@ -1,11 +1,10 @@
+'use strict';
+
 var rpc = require('../lib/rpc');
 var Communications = require('../lib/communications');
 
 var sinon = require('sinon');
-var q = require('q');
 require('should');
-
-var service;
 
 function nullLog() { }
 
@@ -19,7 +18,7 @@ var logger = {
 
 var someService = { serviceMethod: function () {} };
 someService.serviceMethod.$timeout = 999;
-someService.name = 'someService'
+someService.name = 'someService';
 someService.$expose = ['serviceMethod'];
 someService.$version = 0;
 
@@ -43,10 +42,10 @@ describe('Communications', function () {
       comms.on('request:error', decrementCount);
       comms.on('request:uncaughterr', decrementCount);
 
-      rpcService.emit('request:start', {i:4});
-      rpcService.emit('request:complete', {i:3});
-      rpcService.emit('request:error', {i:2});
-      rpcService.emit('request:uncaughterr', {i:1});
+      rpcService.emit('request:start', {i: 4});
+      rpcService.emit('request:complete', {i: 3});
+      rpcService.emit('request:error', {i: 2});
+      rpcService.emit('request:uncaughterr', {i: 1});
 
       function decrementCount(e) {
         // check that the args were passed through...

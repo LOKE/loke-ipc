@@ -1,3 +1,5 @@
+'use strict';
+
 var ipc = require('../../lib');
 var Q = require('q');
 var config = require('./config');

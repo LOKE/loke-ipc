@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+'use strict';
+
 var repl = require('repl');
 var q = require('q');
 var path = require('path');
