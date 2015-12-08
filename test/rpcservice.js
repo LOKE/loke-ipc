@@ -197,7 +197,7 @@ describe('RpcService', function () {
 
         e.method.should.equal('aMethod');
         e.duration.should.be.above(0);
-        e.duration.should.be.below(100); // no way this should be above 100ms 
+        e.duration.should.be.below(100); // no way this should be above 100ms
 
         done();
       });
