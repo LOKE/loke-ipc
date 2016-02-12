@@ -18,7 +18,7 @@ var errorResponse = sinon.match(function (response) {
          response.result === null &&
          typeof response.error.code === 'number' &&
          /string|number/.test(typeof response.id);
-}, 'resultResponse');
+}, 'errorResponse');
 
 var parseErrorResponse = sinon.match(function (response) {
   return response.error !== null &&
@@ -86,8 +86,7 @@ describe('RpcService', function () {
     var method;
 
     beforeEach(function () {
-      method = sinon.stub();
-      method.callsArg(1);
+      method = sinon.stub().returns(q.resolve());
 
       service.exposeMethod('aMethod', method);
     });
@@ -108,7 +107,7 @@ describe('RpcService', function () {
       mock.expects('_handleResponse')
       .once()
       .withArgs(msg, resultResponse)
-      .returns(q.when());
+      .returns(q.resolve());
 
       service._handleMsg(msg)
       .nodeify(done);
@@ -123,7 +122,7 @@ describe('RpcService', function () {
       mock.expects('_handleResponse')
       .once()
       .withArgs(msg, parseErrorResponse)
-      .returns(q.when());
+      .returns(q.resolve());
 
       service._handleMsg(msg)
       .nodeify(done);
@@ -131,7 +130,7 @@ describe('RpcService', function () {
     });
 
     it('should send a error response if error', function (done) {
-      method.callsArgWith(1, new Error());
+      method.returns(q.reject(new Error()));
 
       var msg = {
         content: new Buffer(JSON.stringify({
@@ -144,7 +143,7 @@ describe('RpcService', function () {
       mock.expects('_handleResponse')
       .once()
       .withArgs(msg, errorResponse)
-      .returns(q.when());
+      .returns(q.resolve());
 
       service._handleMsg(msg)
       .nodeify(done);
@@ -197,7 +196,7 @@ describe('RpcService', function () {
 
         e.method.should.equal('aMethod');
         e.duration.should.be.above(0);
-        e.duration.should.be.below(100); // no way this should be above 100ms 
+        e.duration.should.be.below(100); // no way this should be above 100ms
 
         done();
       });

@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/LOKE/loke-ipc.svg?branch=master)](https://travis-ci.org/LOKE/loke-ipc)
 
+**UPDATE:** *breaking change!* constructor parameters are now different. Accepts an options argument.
+Can also be provided with a NewRelic client agent so that requests can be tracked and analyzed by NewRelic.
+
 ## Connecting
 
 ```js
@@ -24,16 +27,44 @@ communications.start()
 });
 ```
 
-Specify the location of RMQ:
+Specify the location of RabbitMQ:
 
 ```js
 var lokeIpc = require('loke-ipc');
 
-lokeIpc.connect('amqp://localhost')
+lokeIpc.connect({amqpUri:'amqp://localhost'})
 .then(function(connection) {
    console.log('Connected!');
 });
 ```
+
+Using NewRelic:
+
+```js
+var lokeIpc = require('loke-ipc');
+var newRelic = require('new-relic');
+
+// if a new relic client is provided it will be used
+lokeIpc.connect({newRelic: newRelic})
+.then(function(connection) {
+   console.log('Connected!');
+});
+```
+
+Using a custom logger:
+
+```js
+var lokeIpc = require('loke-ipc');
+var logger = require('./my/custom/logger');
+
+// a custom logger must implement .info .debug .warn .error
+lokeIpc.connect({logger: logger})
+.then(function(connection) {
+   logger.info('Connected!');
+});
+```
+
+
 
 
 ## Consuming Services
@@ -41,7 +72,7 @@ lokeIpc.connect('amqp://localhost')
 ```js
 var lokeIpc = require('loke-ipc');
 
-lokeIpc.connect('amqp://localhost')
+lokeIpc.connect()
 .then(function(connection) {
    return connection.getRpcClient();
 })
@@ -62,7 +93,7 @@ then
 ```js
 var lokeIpc = require('loke-ipc');
 
-lokeIpc.connect('amqp://localhost')
+lokeIpc.connect()
 .then(function(connection) {
   return connection.getRpcClient();
 })
@@ -84,6 +115,10 @@ closeServices
 
 
 ```
+
+
+
+
 
 ## RPC Events
 
