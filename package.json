@@ -1,6 +1,6 @@
 {
   "name": "loke-ipc",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Inter-process/service communications lib",
   "main": "lib/index.js",
   "dependencies": {
