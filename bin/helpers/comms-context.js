@@ -5,7 +5,7 @@ var logger = require('./logger');
 
 module.exports = function (fn) {
   console.log('connecting to', config.amqpuri + '...');
-  var commsPromise = Q.when(ipc.connect(config.amqpuri, logger));
+  var commsPromise = Q.when(ipc.connect({amqpUri: config.amqpuri, logger: logger}));
 
   return commsPromise.then(fn)
   .finally(function() {
