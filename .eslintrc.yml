@@ -1,0 +1,27 @@
+env:
+  node: true
+  es6: true
+  mocha: true
+extends: 'eslint:recommended'
+parserOptions:
+  sourceType: module
+  ecmaVersion: 8
+rules:
+  indent:
+    - warn
+    - 2
+    - MemberExpression: 0
+      SwitchCase: 1
+  no-case-declarations: 0
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  mocha/no-exclusive-tests: error
+plugins:
+  - mocha

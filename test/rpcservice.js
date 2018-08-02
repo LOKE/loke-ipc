@@ -160,9 +160,9 @@ describe('RpcService', function () {
       };
 
       mock.expects('_handleResponse')
-        .once()
-        .withArgs(msg, resultResponse)
-        .returns(q.when());
+      .once()
+      .withArgs(msg, resultResponse)
+      .returns(q.when());
 
       service.on('request:start', function(e) {
         e.should.have.property('request');
@@ -184,9 +184,9 @@ describe('RpcService', function () {
       };
 
       mock.expects('_handleResponse')
-        .once()
-        .withArgs(msg, resultResponse)
-        .returns(q.when());
+      .once()
+      .withArgs(msg, resultResponse)
+      .returns(q.when());
 
       service.on('request:complete', function(e) {
         e.should.have.property('request');
@@ -217,7 +217,7 @@ describe('RpcService', function () {
       };
 
       mock.expects('_handleRequest')
-        .returns(q.reject(new Error('Rejected')));
+      .returns(q.reject(new Error('Rejected')));
 
       service.on('request:error', function(e) {
         try {
@@ -232,8 +232,8 @@ describe('RpcService', function () {
       });
 
       service._handleMsg(msg)
-        .fail(function(err) { })
-        .done();
+      .fail(() => {})
+      .done();
     });
 
   });
@@ -243,7 +243,7 @@ describe('RpcService', function () {
     beforeEach(function () {
       var someService = {
         serviceMethod: function () {},
-        serviceMethodWithParams: function (paramA, paramB) {}
+        serviceMethodWithParams: function (paramA, paramB) {} // eslint-disable-line no-unused-vars
       };
 
       service.exposeMethod('aMethodWithNoParams', function () {});

@@ -19,12 +19,13 @@
   },
   "devDependencies": {
     "eslint": "^5.2.0",
+    "eslint-plugin-mocha": "^5.1.0",
     "mocha": "^5.2.0",
     "should": "^13.2.3",
     "sinon": "^6.1.4"
   },
   "scripts": {
-    "lint": "eslint --rulesdir eslint-rules .",
+    "lint": "eslint .",
     "test": "mocha test",
     "test-dev": "nodemon -x \"_mocha $@\""
   },
