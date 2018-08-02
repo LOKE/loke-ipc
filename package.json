@@ -1,5 +1,5 @@
 {
-  "name": "loke-ipc",
+  "name": "@loke/ipc",
   "version": "1.1.0",
   "description": "Inter-process/service communications lib",
   "main": "lib/index.js",
