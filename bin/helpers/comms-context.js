@@ -4,6 +4,7 @@ var config = require('./config');
 var logger = require('./logger');
 
 module.exports = function (fn) {
+  // eslint-disable-next-line no-console
   console.log('connecting to', config.amqpuri + '...');
   var commsPromise = Q.when(ipc.connect({amqpUri: config.amqpuri, logger: logger}));
 

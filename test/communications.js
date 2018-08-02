@@ -2,10 +2,7 @@ var rpc = require('../lib/rpc');
 var Communications = require('../lib/communications');
 
 var sinon = require('sinon');
-var q = require('q');
 require('should');
-
-var service;
 
 function nullLog() { }
 
@@ -19,7 +16,7 @@ var logger = {
 
 var someService = { serviceMethod: function () {} };
 someService.serviceMethod.$timeout = 999;
-someService.name = 'someService'
+someService.name = 'someService';
 someService.$expose = ['serviceMethod'];
 someService.$version = 0;
 
@@ -30,7 +27,7 @@ describe('Communications', function () {
     var rpcService = new rpc.RpcService(someService.name, someService.$version, false, logger);
 
     mock.expects('createFromService')
-      .returns(rpcService);
+    .returns(rpcService);
 
     it('should proxy RPC request events', function (done) {
       var comms = new Communications('', logger);
