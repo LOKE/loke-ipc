@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "description": "Inter-process/service communications lib",
   "main": "lib/index.js",
+  "engines" : { "node" : ">=6.0.0" },
   "dependencies": {
     "amqplib": "^0.5.2",
     "docopt": "^0.6.2",
